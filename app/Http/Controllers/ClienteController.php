@@ -2,63 +2,90 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente; // <--- Importando o Model Cliente
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista todos os clientes
      */
     public function index()
     {
-        //
+        $clientes = Cliente::all();
+        return view('clientes.index', compact('clientes'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostra o formulário de cadastro
      */
     public function create()
     {
-        //
+        return view('clientes.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Salva o cliente no banco
      */
     public function store(Request $request)
     {
-        //
+        // Validação: O email deve ser único na tabela 'clientes'
+        $request->validate([
+            'nome' => 'required',
+            'email' => 'required|email|unique:clientes',
+            'telefone' => 'required',
+        ]);
+
+        Cliente::create($request->all());
+
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente cadastrado com sucesso!');
     }
 
     /**
-     * Display the specified resource.
+     * Mostra detalhes do cliente
      */
-    public function show(string $id)
+    public function show(Cliente $cliente)
     {
-        //
+        // Aqui futuramente podemos mostrar o histórico de pedidos dele!
+        return view('clientes.show', compact('cliente'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Mostra formulário de edição
      */
-    public function edit(string $id)
+    public function edit(Cliente $cliente)
     {
-        //
+        return view('clientes.edit', compact('cliente'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza os dados
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Cliente $cliente)
     {
-        //
+        $request->validate([
+            'nome' => 'required',
+            'email' => 'required|email', // Aqui tiramos o 'unique' para não dar erro se ele mantiver o mesmo email
+            'telefone' => 'required',
+        ]);
+
+        $cliente->update($request->all());
+
+        return redirect()->route('clientes.index')
+            ->with('success', 'Dados do cliente atualizados!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove o cliente
      */
-    public function destroy(string $id)
+    public function destroy(Cliente $cliente)
     {
-        //
+        // ATENÇÃO: Se o banco estiver configurado com CASCADE,
+        // isso vai apagar também todos os pedidos desse cliente.
+        $cliente->delete();
+
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente removido com sucesso!');
     }
 }
