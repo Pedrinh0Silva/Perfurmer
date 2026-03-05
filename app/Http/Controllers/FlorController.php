@@ -60,27 +60,30 @@ class FlorController extends Controller
     /**
      * Mostra o formulário para editar uma flor existente
      */
-    public function edit(Flor $flor)
+  public function edit(string $id)
     {
+        // Busca a flor no banco de dados pelo ID
+        $flor = \App\Models\Flor::findOrFail($id);
+        
+        // Manda os dados dessa flor para a tela de edição
         return view('flores.edit', compact('flor'));
     }
 
     /**
      * Atualiza os dados no banco (Igual ao store, mas para editar)
      */
-    public function update(Request $request, Flor $flor)
+ public function update(Request $request, string $id)
     {
-        $request->validate([
-            'nome' => 'required',
-            'preco' => 'required|numeric',
-        ]);
-
+        // 1. Acha a flor no banco de dados
+        $flor = \App\Models\Flor::findOrFail($id);
+        
+        // 2. Atualiza os dados com o que veio do formulário
         $flor->update($request->all());
-
+        
+        // 3. Volta para a lista com a mensagem verde de sucesso
         return redirect()->route('flores.index')
-            ->with('success', 'Flor atualizada com sucesso!');
+                         ->with('success', 'Flor atualizada com sucesso!');
     }
-
     /**
      * Apaga a flor do banco
      */
