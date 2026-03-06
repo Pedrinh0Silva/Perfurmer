@@ -66,7 +66,7 @@ class ClienteController extends Controller
     {
         $request->validate([
             'nome' => 'required',
-            'email' => 'required|email', // Aqui tiramos o 'unique' para não dar erro se ele mantiver o mesmo email
+            'email' => 'required|email|unique:clientes,email,' . $cliente->id,
             'telefone' => 'required',
         ]);
 
