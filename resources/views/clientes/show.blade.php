@@ -24,13 +24,27 @@
             <thead>
                 <tr>
                     <th>Nº do Pedido</th>
-                    <th>Data</th>
-                    <th>Valor Total</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
+                    <tbody>
+                @forelse($cliente->pedidos as $pedido)
+                    <tr>
+                        <td>#{{ $pedido->id }}</td>
+                        <td>{{ $pedido->data_pedido->format('d/m/Y') }}</td>
+                        <td>R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}</td>
+                        <td>
+                            <span class="badge bg-primary">{{ $pedido->status }}</span>
+                        </td>
+                        <td>
+                            <a href="{{ route('pedidos.show', $pedido->id) }}" class="btn btn-sm btn-outline-secondary">Ver Detalhes</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            Este cliente ainda não fez nenhum pedido.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
                 <tr>
                     <td colspan="5" class="text-center text-muted py-4">
                         Estamos quase lá! Precisamos conectar as tabelas para listar os pedidos aqui.

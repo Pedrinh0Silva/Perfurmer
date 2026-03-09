@@ -18,8 +18,8 @@
                     <input type="text" class="form-control" id="nome" name="nome" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="tipo" class="form-label">Tipo (Ex: Rosa, Orquídea)</label>
-                    <input type="text" class="form-control" id="tipo" name="tipo" required>
+                    <label for="cor" class="form-label">Cor (Ex: Vermelha, Branca)</label>
+                    <input type="text" class="form-control" id="cor" name="cor" required>
                 </div>
             </div>
 

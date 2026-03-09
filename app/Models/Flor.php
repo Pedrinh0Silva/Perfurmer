@@ -15,7 +15,7 @@ class Flor extends Model
     // 2. Liberando as colunas para cadastro em massa (Mass Assignment)
     protected $fillable = [
         'nome',
-        'tipo',
+        'cor',
         'preco',
         'quantidade_estoque',
         'descricao',

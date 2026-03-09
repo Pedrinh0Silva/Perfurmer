@@ -12,15 +12,11 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <thead>
-                <tr>
                     <th>ID</th>
                     <th>Nome</th>
-                    <th>Espécie</th> <th>Preço</th>
+                    <th>Cor</th> <th>Preço</th>
                     <th>Estoque</th>
                     <th>Ações</th>
-                </tr>
-            </thead>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +24,7 @@
                     <tr>
                         <td>{{ $flor->id }}</td>
                         <td>{{ $flor->nome }}</td>
-                        <td>{{ $flor->tipo }}</td> <td>R$ {{ number_format($flor->preco, 2, ',', '.') }}</td>
+                        <td>{{ $flor->cor }}</td> <td>R$ {{ number_format($flor->preco, 2, ',', '.') }}</td>
                         <td>{{ $flor->quantidade_estoque }}</td>
                         <td>
                             <a href="{{ route('flores.edit', $flor->id) }}" class="btn btn-sm btn-primary">Editar</a>

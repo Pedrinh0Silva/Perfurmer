@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Flor; // <--- Importante: Avisar que vamos usar o Model Flor
+use App\Models\Flor; 
 use Illuminate\Http\Request;
 
 class FlorController extends Controller
@@ -12,11 +12,7 @@ class FlorController extends Controller
      */
     public function index()
     {
-        // 1. Vai no banco e pega TUDO da tabela 'flores'
         $flores = Flor::all();
-        
-        // 2. Manda esses dados para a View (telas/HTML)
-        // A função compact('flores') cria um pacote com os dados
         return view('flores.index', compact('flores'));
     }
 
@@ -33,18 +29,18 @@ class FlorController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validação (Segurança Básica)
-        // Garante que o usuário não mandou o nome vazio ou preço com letras
+        // 1. Validação: Adicionamos a regra exigindo a 'cor'
         $request->validate([
-            'nome' => 'required',
+            'nome' => 'required|string|max:255',
+            'cor'  => 'required|string|max:100', // <--- Validação da Cor aqui!
             'preco' => 'required|numeric',
             'quantidade_estoque' => 'required|integer',
         ]);
 
-        // 2. Cria no banco usando os dados que vieram do formulário
+        // 2. Cria no banco usando os dados validados
         Flor::create($request->all());
 
-        // 3. Redireciona para a lista com uma mensagem de sucesso
+        // 3. Redireciona com sucesso
         return redirect()->route('flores.index')
             ->with('success', 'Flor cadastrada com sucesso!');
     }
@@ -60,30 +56,36 @@ class FlorController extends Controller
     /**
      * Mostra o formulário para editar uma flor existente
      */
-  public function edit(string $id)
+    public function edit(string $id)
     {
-        // Busca a flor no banco de dados pelo ID
-        $flor = \App\Models\Flor::findOrFail($id);
-        
-        // Manda os dados dessa flor para a tela de edição
+        $flor = Flor::findOrFail($id);
         return view('flores.edit', compact('flor'));
     }
 
     /**
-     * Atualiza os dados no banco (Igual ao store, mas para editar)
+     * Atualiza os dados no banco
      */
- public function update(Request $request, string $id)
+    public function update(Request $request, string $id)
     {
-        // 1. Acha a flor no banco de dados
-        $flor = \App\Models\Flor::findOrFail($id);
+        // 1. Validação no Update também para garantir a segurança!
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'cor'  => 'required|string|max:100', // <--- Validação da Cor aqui também!
+            'preco' => 'required|numeric',
+            'quantidade_estoque' => 'required|integer',
+        ]);
+
+        // 2. Acha a flor no banco de dados
+        $flor = Flor::findOrFail($id);
         
-        // 2. Atualiza os dados com o que veio do formulário
+        // 3. Atualiza os dados
         $flor->update($request->all());
         
-        // 3. Volta para a lista com a mensagem verde de sucesso
+        // 4. Volta para a lista
         return redirect()->route('flores.index')
                          ->with('success', 'Flor atualizada com sucesso!');
     }
+
     /**
      * Apaga a flor do banco
      */

@@ -12,7 +12,7 @@ return new class extends Migration
     Schema::create('flores', function (Blueprint $table) {
         $table->id();
         $table->string('nome', 100);
-        $table->string('tipo', 100);
+        $table->string('cor', 100);
         $table->decimal('preco', 10, 2);
         $table->integer('quantidade_estoque');
         $table->text('descricao')->nullable();

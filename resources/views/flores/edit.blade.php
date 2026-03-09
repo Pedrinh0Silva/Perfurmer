@@ -19,8 +19,8 @@
                     <input type="text" class="form-control" id="nome" name="nome" value="{{ $flor->nome }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="tipo" class="form-label">Tipo</label>
-                    <input type="text" class="form-control" id="tipo" name="tipo" value="{{ $flor->tipo }}" required>
+                    <label for="cor" class="form-label">Cor</label>
+                    <input type="text" class="form-control" id="cor" name="cor" value="{{ $flor->cor }}" required>
                 </div>
             </div>
 
