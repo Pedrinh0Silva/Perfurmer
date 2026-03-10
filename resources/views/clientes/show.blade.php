@@ -17,6 +17,40 @@
     </div>
 </div>
 
+@if($cliente->endereco)
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">📍 Localização no Mapa</h5>
+        </div>
+        
+        <div class="card-body p-0">
+            @php
+                // Juntando as peças para o Google entender exatamente onde é
+                $enderecoCompleto = "{$cliente->endereco}, {$cliente->numero} - {$cliente->bairro}, {$cliente->cidade} - {$cliente->estado}, {$cliente->cep}";
+            @endphp
+            
+            <iframe 
+                width="100%" 
+                height="400" 
+                frameborder="0" 
+                scrolling="no" 
+                marginheight="0" 
+                marginwidth="0" 
+                src="https://maps.google.com/maps?q={{ urlencode($enderecoCompleto) }}&output=embed"
+                style="border-bottom-left-radius: 0.375rem; border-bottom-right-radius: 0.375rem;">
+            </iframe>
+        </div>
+        
+        <div class="card-footer bg-light text-center">
+            <small class="text-muted">{{ $enderecoCompleto }}</small>
+        </div>
+    </div>
+@else
+    <div class="alert alert-warning mt-4">
+        Este cliente ainda não possui endereço cadastrado para exibir no mapa.
+    </div>
+@endif
+
 <h4 class="mb-3">📦 Histórico de Pedidos</h4>
 <div class="card shadow-sm">
     <div class="card-body p-0"> <table class="table table-hover mb-0">

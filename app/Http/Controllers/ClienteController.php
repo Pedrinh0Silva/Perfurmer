@@ -29,17 +29,22 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        // Validação: O email deve ser único na tabela 'clientes'
-        $request->validate([
-            'nome' => 'required',
+        $validatedData = $request->validate([
+            'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:clientes',
-            'telefone' => 'required',
+            'telefone' => 'nullable|string|max:20',
+            // 👇 Nossas novas regras mágicas aqui! 👇
+            'cep' => 'nullable|string|max:10',
+            'endereco' => 'nullable|string|max:255',
+            'numero' => 'nullable|string|max:20',
+            'bairro' => 'nullable|string|max:255',
+            'cidade' => 'nullable|string|max:255',
+            'estado' => 'nullable|string|max:2',
         ]);
 
-        Cliente::create($request->all());
+        Cliente::create($validatedData);
 
-        return redirect()->route('clientes.index')
-            ->with('success', 'Cliente cadastrado com sucesso!');
+        return redirect()->route('clientes.index')->with('success', 'Cliente cadastrado com sucesso!');
     }
 
     /**
@@ -68,6 +73,13 @@ class ClienteController extends Controller
             'nome' => 'required',
             'email' => 'required|email|unique:clientes,email,' . $cliente->id,
             'telefone' => 'required',
+            // 👇 Nossas novas regras mágicas aqui! 👇
+            'cep' => 'nullable|string|max:10',
+            'endereco' => 'nullable|string|max:255',
+            'numero' => 'nullable|string|max:20',
+            'bairro' => 'nullable|string|max:255',
+            'cidade' => 'nullable|string|max:255',
+            'estado' => 'nullable|string|max:2',
         ]);
 
         $cliente->update($request->all());
