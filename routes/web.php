@@ -6,15 +6,15 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
 use Illuminate\Support\Facades\Route;
 
+// Importação dos Models para a Dashboard funcionar
+use App\Models\Flor;
+use App\Models\Cliente;
+use App\Models\Pedido;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 // Página inicial de boas-vindas
@@ -22,9 +22,27 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard (Protegido por login)
+// Dashboard (Protegido por login) com a coluna de valor corrigida
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    // Buscando os dados reais das contagens (flores e clientes)
+    $totalFlores = Flor::count() ?? 0;
+    $totalClientes = Cliente::count() ?? 0;
+    
+    // Busca o faturamento usando a coluna real 'valor_total'
+    try {
+        $faturamentoMensal = Pedido::whereMonth('created_at', now()->month)
+                                   ->whereYear('created_at', now()->year)
+                                   ->sum('valor_total'); 
+    } catch (\Exception $e) {
+        // Se algo der errado no banco, define como 0 para não travar a tela
+        $faturamentoMensal = 0;
+    }
+
+    return view('dashboard', [
+        'totalFlores' => $totalFlores,
+        'totalClientes' => $totalClientes,
+        'faturamentoMensal' => $faturamentoMensal
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // GRUPO PROTEGIDO: Tudo aqui dentro exige que o usuário esteja logado
@@ -40,7 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('clientes', ClienteController::class);
     Route::resource('pedidos', PedidoController::class);
 
-}); // <- O grupo protegido fecha aqui!
+});
 
 // Rotas de autenticação padrão do Laravel Breeze
 require __DIR__.'/auth.php';
