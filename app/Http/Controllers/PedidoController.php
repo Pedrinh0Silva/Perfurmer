@@ -26,13 +26,12 @@ class PedidoController extends Controller
      * Mostra o formulário de Nova Venda
      */
     public function create()
-    {
-        // Precisamos enviar a lista de clientes e flores para preencher os <select>
-        $clientes = Cliente::all();
-        $flores = Flor::where('quantidade_estoque', '>', 0)->get(); // Só mostra o que tem estoque
-
-        return view('pedidos.create', compact('clientes', 'flores'));
-    }
+{
+    $clientes = Cliente::all(); // Busca todos os clientes
+    $flores = Flor::all();     // Busca todas as flores (se precisar)
+    
+    return view('pedidos.create', compact('clientes', 'flores'));
+}
 
     /**
      * O CORAÇÃO DO SISTEMA: Salva a venda, os itens e baixa o estoque
@@ -113,13 +112,24 @@ class PedidoController extends Controller
      */
     public function destroy($id)
     {
-        $pedido = Pedido::findOrFail($id);
-        
-        // DICA: Num sistema real, aqui nós deveríamos devolver os itens para o estoque.
-        // Para simplificar agora, vamos apenas apagar o registro.
-        
-        $pedido->delete(); // O 'cascade' no banco vai apagar os itens automaticamente
+        // 1. PORTA DE SEGURANÇA: Bloqueia se não for admin
+        if (!auth()->user()->is_admin) {
+            return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir vendas.']);
+        }
 
-        return redirect()->route('pedidos.index')->with('success', 'Pedido cancelado!');
+        try {
+            // 2. Busca o pedido pelo ID
+            $pedido = Pedido::findOrFail($id);
+            
+            // 3. Deleta o pedido
+            $pedido->delete();
+
+            // 4. Redireciona de volta com sucesso
+            return redirect()->route('pedidos.index')->with('success', 'Venda excluída com sucesso!');
+
+        } catch (\Exception $e) {
+            // 5. Captura qualquer erro
+            return redirect()->back()->withErrors(['erro' => 'Erro ao excluir a venda: ' . $e->getMessage()]);
+        }
     }
 }

@@ -66,7 +66,7 @@ class ClienteController extends Controller
     {
         $request->validate([
             'nome' => 'required',
-            'email' => 'required|email', // Aqui tiramos o 'unique' para não dar erro se ele mantiver o mesmo email
+            'email' => 'required|email|unique:clientes,email,' . $cliente->id,
             'telefone' => 'required',
         ]);
 
@@ -79,13 +79,26 @@ class ClienteController extends Controller
     /**
      * Remove o cliente
      */
-    public function destroy(Cliente $cliente)
+    public function destroy($id)
     {
-        // ATENÇÃO: Se o banco estiver configurado com CASCADE,
-        // isso vai apagar também todos os pedidos desse cliente.
-        $cliente->delete();
+        // 1. PORTA DE SEGURANÇA: Bloqueia se não for admin
+        if (!auth()->user()->is_admin) {
+            return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir.']);
+        }
 
-        return redirect()->route('clientes.index')
-            ->with('success', 'Cliente removido com sucesso!');
+        try {
+            // 2. Busca o cliente no banco
+            $cliente = Cliente::findOrFail($id);
+            
+            // 3. Tenta excluir
+            $cliente->delete();
+
+            // 4. Se deu certo, volta para a lista com mensagem de sucesso
+            return redirect()->route('clientes.index')->with('success', 'Cliente excluído com sucesso!');
+
+        } catch (\Exception $e) {
+            // 5. Se o banco bloquear (porque o cliente tem pedidos, por exemplo), mostramos este erro:
+            return redirect()->back()->withErrors(['erro' => 'Não é possível excluir este cliente, pois ele possui pedidos vinculados a ele.']);
+        }
     }
 }
