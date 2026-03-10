@@ -26,13 +26,12 @@ class PedidoController extends Controller
      * Mostra o formulário de Nova Venda
      */
     public function create()
-    {
-        // Precisamos enviar a lista de clientes e flores para preencher os <select>
-        $clientes = Cliente::all();
-        $flores = Flor::where('quantidade_estoque', '>', 0)->get(); // Só mostra o que tem estoque
-
-        return view('pedidos.create', compact('clientes', 'flores'));
-    }
+{
+    $clientes = Cliente::all(); // Busca todos os clientes
+    $flores = Flor::all();     // Busca todas as flores (se precisar)
+    
+    return view('pedidos.create', compact('clientes', 'flores'));
+}
 
     /**
      * O CORAÇÃO DO SISTEMA: Salva a venda, os itens e baixa o estoque
@@ -113,7 +112,13 @@ class PedidoController extends Controller
      */
     public function destroy($id)
     {
-        $pedido = Pedido::findOrFail($id);
+        
+    // A PORTA DE SEGURANÇA: Se não for admin, bloqueia e avisa!
+    if (!auth()->user()->is_admin) {
+        return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir registros.']);
+    }    
+    
+    $pedido = Pedido::findOrFail($id);
         
         // DICA: Num sistema real, aqui nós deveríamos devolver os itens para o estoque.
         // Para simplificar agora, vamos apenas apagar o registro.

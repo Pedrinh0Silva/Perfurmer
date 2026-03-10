@@ -91,7 +91,12 @@ class FlorController extends Controller
      */
     public function destroy(Flor $flor)
     {
-        $flor->delete();
+    // A PORTA DE SEGURANÇA: Se não for admin, bloqueia e avisa!
+    if (!auth()->user()->is_admin) {
+        return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir registros.']);
+    }    
+    
+    $flor->delete();
 
         return redirect()->route('flores.index')
             ->with('success', 'Flor removida com sucesso!');

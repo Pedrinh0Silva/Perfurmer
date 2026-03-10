@@ -19,19 +19,24 @@
 
 <h4 class="mb-3">📦 Histórico de Pedidos</h4>
 <div class="card shadow-sm">
-    <div class="card-body">
-        <table class="table table-hover">
-            <thead>
+    <div class="card-body p-0"> <table class="table table-hover mb-0">
+            <thead class="table-light">
                 <tr>
                     <th>Nº do Pedido</th>
-                    <tbody>
+                    <th>Data</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
                 @forelse($cliente->pedidos as $pedido)
                     <tr>
                         <td>#{{ $pedido->id }}</td>
                         <td>{{ $pedido->data_pedido->format('d/m/Y') }}</td>
                         <td>R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}</td>
                         <td>
-                            <span class="badge bg-primary">{{ $pedido->status }}</span>
+                            <span class="badge bg-primary">{{ ucfirst($pedido->status) }}</span>
                         </td>
                         <td>
                             <a href="{{ route('pedidos.show', $pedido->id) }}" class="btn btn-sm btn-outline-secondary">Ver Detalhes</a>
@@ -39,17 +44,11 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">
+                        <td colspan="5" class="text-center text-muted py-5">
                             Este cliente ainda não fez nenhum pedido.
                         </td>
                     </tr>
                 @endforelse
-            </tbody>
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-4">
-                        Estamos quase lá! Precisamos conectar as tabelas para listar os pedidos aqui.
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>

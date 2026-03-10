@@ -14,7 +14,8 @@
                     <th>ID</th>
                     <th>Nome</th>
                     <th>E-mail / Contato</th>
-                    <th>Pedidos</th> <th>Ações</th>
+                    <th>Pedidos</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,12 +29,21 @@
                         </td>
                         <td>
                             <a href="{{ route('clientes.show', $cliente->id) }}" class="btn btn-sm btn-outline-info">
-    Ver Pedidos
-</a>
-                             
+                                Ver Pedidos
+                            </a>
                         </td>
                         <td>
-                            <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-primary">Editar</a>
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                
+                                @if(auth()->check() && auth()->user()->is_admin)
+                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                    </form>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @empty

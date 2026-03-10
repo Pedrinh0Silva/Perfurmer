@@ -83,6 +83,11 @@ class ClienteController extends Controller
     {
         // ATENÇÃO: Se o banco estiver configurado com CASCADE,
         // isso vai apagar também todos os pedidos desse cliente.
+        // A PORTA DE SEGURANÇA: Se não for admin, bloqueia e avisa!
+    if (!auth()->user()->is_admin) {
+        return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir registros.']);
+    }
+        
         $cliente->delete();
 
         return redirect()->route('clientes.index')
