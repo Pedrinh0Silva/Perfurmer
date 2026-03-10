@@ -112,19 +112,24 @@ class PedidoController extends Controller
      */
     public function destroy($id)
     {
-        
-    // A PORTA DE SEGURANÇA: Se não for admin, bloqueia e avisa!
-    if (!auth()->user()->is_admin) {
-        return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir registros.']);
-    }    
-    
-    $pedido = Pedido::findOrFail($id);
-        
-        // DICA: Num sistema real, aqui nós deveríamos devolver os itens para o estoque.
-        // Para simplificar agora, vamos apenas apagar o registro.
-        
-        $pedido->delete(); // O 'cascade' no banco vai apagar os itens automaticamente
+        // 1. PORTA DE SEGURANÇA: Bloqueia se não for admin
+        if (!auth()->user()->is_admin) {
+            return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir vendas.']);
+        }
 
-        return redirect()->route('pedidos.index')->with('success', 'Pedido cancelado!');
+        try {
+            // 2. Busca o pedido pelo ID
+            $pedido = Pedido::findOrFail($id);
+            
+            // 3. Deleta o pedido
+            $pedido->delete();
+
+            // 4. Redireciona de volta com sucesso
+            return redirect()->route('pedidos.index')->with('success', 'Venda excluída com sucesso!');
+
+        } catch (\Exception $e) {
+            // 5. Captura qualquer erro
+            return redirect()->back()->withErrors(['erro' => 'Erro ao excluir a venda: ' . $e->getMessage()]);
+        }
     }
 }

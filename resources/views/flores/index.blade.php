@@ -27,8 +27,18 @@
                         <td>{{ $flor->cor }}</td> <td>R$ {{ number_format($flor->preco, 2, ',', '.') }}</td>
                         <td>{{ $flor->quantidade_estoque }}</td>
                         <td>
-                            <a href="{{ route('flores.edit', $flor->id) }}" class="btn btn-sm btn-primary">Editar</a>
-                        </td>
+    <a href="{{ route('flores.edit', $flor->id) }}" class="btn btn-sm btn-primary">Editar</a>
+
+    @auth
+        @if(Auth::user()->is_admin)
+            <form action="{{ route('flores.destroy', $flor->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir esta flor?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+            </form>
+        @endif
+    @endauth
+</td>
                     </tr>
                 @empty
                     <tr>

@@ -79,18 +79,26 @@ class ClienteController extends Controller
     /**
      * Remove o cliente
      */
-    public function destroy(Cliente $cliente)
+    public function destroy($id)
     {
-        // ATENÇÃO: Se o banco estiver configurado com CASCADE,
-        // isso vai apagar também todos os pedidos desse cliente.
-        // A PORTA DE SEGURANÇA: Se não for admin, bloqueia e avisa!
-    if (!auth()->user()->is_admin) {
-        return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir registros.']);
-    }
-        
-        $cliente->delete();
+        // 1. PORTA DE SEGURANÇA: Bloqueia se não for admin
+        if (!auth()->user()->is_admin) {
+            return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir.']);
+        }
 
-        return redirect()->route('clientes.index')
-            ->with('success', 'Cliente removido com sucesso!');
+        try {
+            // 2. Busca o cliente no banco
+            $cliente = Cliente::findOrFail($id);
+            
+            // 3. Tenta excluir
+            $cliente->delete();
+
+            // 4. Se deu certo, volta para a lista com mensagem de sucesso
+            return redirect()->route('clientes.index')->with('success', 'Cliente excluído com sucesso!');
+
+        } catch (\Exception $e) {
+            // 5. Se o banco bloquear (porque o cliente tem pedidos, por exemplo), mostramos este erro:
+            return redirect()->back()->withErrors(['erro' => 'Não é possível excluir este cliente, pois ele possui pedidos vinculados a ele.']);
+        }
     }
 }

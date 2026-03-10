@@ -89,16 +89,26 @@ class FlorController extends Controller
     /**
      * Apaga a flor do banco
      */
-    public function destroy(Flor $flor)
+    public function destroy($id)
     {
-    // A PORTA DE SEGURANÇA: Se não for admin, bloqueia e avisa!
-    if (!auth()->user()->is_admin) {
-        return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir registros.']);
-    }    
-    
-    $flor->delete();
+        // 1. Bloqueia se não for admin
+        if (!auth()->user()->is_admin) {
+            return redirect()->back()->withErrors(['erro' => 'Acesso negado!']);
+        }
 
-        return redirect()->route('flores.index')
-            ->with('success', 'Flor removida com sucesso!');
+        try {
+            // 2. Busca a flor pelo ID
+            $flor = Flor::findOrFail($id);
+            
+            // 3. Deleta a flor
+            $flor->delete();
+
+            // 4. Redireciona de volta com sucesso
+            return redirect()->route('flores.index')->with('success', 'Flor excluída com sucesso!');
+
+        } catch (\Exception $e) {
+            // 5. Captura qualquer erro do banco e avisa
+            return redirect()->back()->withErrors(['erro' => 'Erro ao excluir a flor: ' . $e->getMessage()]);
+        }
     }
 }
