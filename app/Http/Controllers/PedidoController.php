@@ -26,73 +26,76 @@ class PedidoController extends Controller
      * Mostra o formulário de Nova Venda
      */
     public function create()
-{
-    $clientes = Cliente::all(); // Busca todos os clientes
-    $flores = Flor::all();     // Busca todas as flores (se precisar)
-    
-    return view('pedidos.create', compact('clientes', 'flores'));
-}
+    {
+        $clientes = Cliente::all(); // Busca todos os clientes
+        $flores = Flor::all();     // Busca todas as flores (se precisar)
+        
+        return view('pedidos.create', compact('clientes', 'flores'));
+    }
 
     /**
      * O CORAÇÃO DO SISTEMA: Salva a venda, os itens e baixa o estoque
      */
     public function store(Request $request)
     {
+        // 1. Validação blindada: verifica o array e o que tem dentro dele
         $request->validate([
-            'cliente_id' => 'required|exists:clientes,id',
-            'itens' => 'required|array', // O formulário deve enviar um array de produtos
+            'cliente_id'         => 'required|exists:clientes,id',
+            'itens'              => 'required|array|min:1',
+            'itens.*.flor_id'    => 'required|exists:flores,id', // CORRIGIDO AQUI: de 'flors' para 'flores'
+            'itens.*.quantidade' => 'required|integer|min:1',
         ]);
 
         try {
-            // DB::transaction garante que ou salva TUDO ou não salva NADA (se der erro no meio)
+            // DB::transaction garante que ou salva TUDO ou desfaz TUDO
             DB::transaction(function () use ($request) {
                 
-                // 1. Cria o Pedido (Cabeçalho)
+                // 2. Cria o Pedido (Cabeçalho)
                 $pedido = Pedido::create([
-                    'cliente_id' => $request->cliente_id,
+                    'cliente_id'  => $request->cliente_id,
                     'data_pedido' => now(),
-                    'valor_total' => 0, // Vamos calcular logo abaixo
-                    'status' => 'realizado'
+                    'valor_total' => 0, // Vamos atualizar logo abaixo
+                    'status'      => 'realizado'
                 ]);
 
                 $totalGeral = 0;
 
-                // 2. Percorre cada item escolhido no formulário
+                // 3. Percorre cada item escolhido no formulário
                 foreach ($request->itens as $itemData) {
                     $flor = Flor::findOrFail($itemData['flor_id']);
                     $quantidade = $itemData['quantidade'];
 
                     // Verifica se tem estoque suficiente
                     if ($flor->quantidade_estoque < $quantidade) {
-                        throw new \Exception("Estoque insuficiente para a flor: {$flor->nome}");
+                        throw new \Exception("Estoque insuficiente para a flor: {$flor->nome}. Disponível: {$flor->quantidade_estoque}");
                     }
 
-                    // Calcula o subtotal desse item
+                    // Calcula o subtotal desse item usando o preço do banco (segurança máxima)
                     $subtotal = $flor->preco * $quantidade;
                     $totalGeral += $subtotal;
 
                     // Cria o Item do Pedido
                     ItemPedido::create([
-                        'pedido_id' => $pedido->id,
-                        'flor_id' => $flor->id,
-                        'quantidade' => $quantidade,
+                        'pedido_id'      => $pedido->id,
+                        'flor_id'        => $flor->id,
+                        'quantidade'     => $quantidade,
                         'preco_unitario' => $flor->preco,
-                        'subtotal' => $subtotal
+                        'subtotal'       => $subtotal
                     ]);
 
-                    // 3. Baixa o Estoque
+                    // 4. Baixa o Estoque
                     $flor->decrement('quantidade_estoque', $quantidade);
                 }
 
-                // 4. Atualiza o valor total do pedido no final
+                // 5. Atualiza o valor total do pedido no final
                 $pedido->update(['valor_total' => $totalGeral]);
             });
 
             return redirect()->route('pedidos.index')->with('success', 'Venda realizada com sucesso!');
 
         } catch (\Exception $e) {
-            // Se der erro (ex: falta de estoque), volta para o formulário com o erro
-            return back()->withErrors(['erro' => $e->getMessage()]);
+            // Se der erro, volta para a tela anterior mantendo os dados preenchidos
+            return back()->withInput()->withErrors(['erro' => $e->getMessage()]);
         }
     }
 
