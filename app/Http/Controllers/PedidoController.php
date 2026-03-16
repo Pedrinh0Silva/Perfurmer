@@ -16,9 +16,8 @@ class PedidoController extends Controller
      */
     public function index()
     {
-        // O 'with' já traz os dados do Cliente junto, evitando lentidão (Eager Loading)
-        $pedidos = Pedido::with('cliente')->orderBy('created_at', 'desc')->get();
-        
+        // O 'with' já traz os dados disponíveis do cliente junto, evitando consultas extras.
+        $pedidos = Pedido::with('cliente')->orderBy('created_at', 'desc')->get();      
         return view('pedidos.index', compact('pedidos'));
     }
 
@@ -28,13 +27,13 @@ class PedidoController extends Controller
     public function create()
     {
         $clientes = Cliente::all(); // Busca todos os clientes
-        $flores = Flor::all();     // Busca todas as flores (se precisar)
+        $flores = Flor::all();     // Busca todas as flores 
         
         return view('pedidos.create', compact('clientes', 'flores'));
     }
 
     /**
-     * O CORAÇÃO DO SISTEMA: Salva a venda, os itens e baixa o estoque
+     * PARTE IMPORTANTE: Salva a venda, os itens e baixa o estoque
      */
     public function store(Request $request)
     {
@@ -100,11 +99,11 @@ class PedidoController extends Controller
     }
 
     /**
-     * Mostra os detalhes de uma venda (Recibo)
+     * Mostra os detalhes de uma venda 
      */
     public function show($id)
     {
-        // Carrega o pedido com o cliente e os itens (e as flores dos itens)
+        // Carrega o pedido com dados e itens do cliente, em uma única consulta
         $pedido = Pedido::with(['cliente', 'itens.flor'])->findOrFail($id);
 
         return view('pedidos.show', compact('pedido'));
@@ -115,19 +114,19 @@ class PedidoController extends Controller
      */
     public function destroy($id)
     {
-        // 1. PORTA DE SEGURANÇA: Bloqueia se não for admin
+        // BARRAMENTO: Bloqueia se não for admin
         if (!auth()->user()->is_admin) {
             return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir vendas.']);
         }
 
         try {
-            // 2. Busca o pedido pelo ID
+            // Busca o pedido pelo ID
             $pedido = Pedido::findOrFail($id);
             
-            // 3. Deleta o pedido
-            $pedido->delete();
+            // Deleta o pedido
+            $pedido->delete();s
 
-            // 4. Redireciona de volta com sucesso
+            // Redireciona de volta com sucesso
             return redirect()->route('pedidos.index')->with('success', 'Venda excluída com sucesso!');
 
         } catch (\Exception $e) {

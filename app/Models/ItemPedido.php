@@ -9,10 +9,10 @@ class ItemPedido extends Model
 {
     use HasFactory;
 
-    // Garantindo que o Laravel encontre a tabela exata (com o underline)
+    // Garante que usemeos a tabela correta
     protected $table = 'item_pedidos';
 
-    // Colunas permitidas para preenchimento (Mass Assignment)
+    // Dados que queremos colertar do cliente
     protected $fillable = [
         'pedido_id',
         'flor_id',
@@ -21,13 +21,13 @@ class ItemPedido extends Model
         'subtotal'
     ];
 
-    // Relacionamento 1: Este item de pedido PERTENCE A um Pedido
+    // RELACIONAMENTO: Este item de pedido PERTENCE A um Pedido   
     public function pedido()
     {
         return $this->belongsTo(Pedido::class);
     }
 
-    // Relacionamento 2: Este item de pedido SE REFERE A uma Flor
+    // RELACIONAMENTO: Este item de pedido SE REFERE A uma Flor
     public function flor()
     {
         return $this->belongsTo(Flor::class);

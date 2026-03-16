@@ -52,7 +52,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        // Aqui futuramente podemos mostrar o histórico de pedidos dele!
+        // Mostra o histórico de pedidos do cliente
         return view('clientes.show', compact('cliente'));
     }
 
@@ -93,23 +93,23 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        // 1. PORTA DE SEGURANÇA: Bloqueia se não for admin
+        // : Bloqueia se não for admin
         if (!auth()->user()->is_admin) {
             return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir.']);
         }
 
         try {
-            // 2. Busca o cliente no banco
+            //  Busca o cliente no banco
             $cliente = Cliente::findOrFail($id);
             
-            // 3. Tenta excluir
+            //  Tenta excluir
             $cliente->delete();
 
-            // 4. Se deu certo, volta para a lista com mensagem de sucesso
+            //  Se deu certo, volta para a lista com mensagem de sucesso
             return redirect()->route('clientes.index')->with('success', 'Cliente excluído com sucesso!');
 
         } catch (\Exception $e) {
-            // 5. Se o banco bloquear (porque o cliente tem pedidos, por exemplo), mostramos este erro:
+            //  Se o banco bloquear, mostra este erro:
             return redirect()->back()->withErrors(['erro' => 'Não é possível excluir este cliente, pois ele possui pedidos vinculados a ele.']);
         }
     }

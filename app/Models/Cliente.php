@@ -8,10 +8,10 @@ class Cliente extends Model
 {
     use HasFactory;
 
-    // Garantindo que o Laravel olhe para a tabela certa
+    // Garante que usemeos a tabela correta
     protected $table = 'clientes';
 
-    // Colunas que podem ser preenchidas ao criar ou atualizar um cliente
+    // Dados que queremos colertar do cliente
     protected $fillable = [
         'nome',
         'email',
@@ -19,7 +19,8 @@ class Cliente extends Model
         'endereco'
     ];
 
-    // Relacionamento: Um cliente possui vários pedidos (1 para N)
+    // Relacionamento: Um cliente possui vários pedidos
+    // 1 + N
     public function pedidos()
     {
         return $this->hasMany(Pedido::class);

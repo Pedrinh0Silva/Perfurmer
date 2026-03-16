@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class FlorController extends Controller
 {
     /**
-     * Mostra a lista de todas as flores (Página Inicial do Catálogo)
+     * Mostra a lista de todas as flores
      */
     public function index()
     {
@@ -25,22 +25,22 @@ class FlorController extends Controller
     }
 
     /**
-     * Recebe os dados do formulário e salva no banco (A Mágica acontece aqui)
+     * Recebe os dados do formulário e salva no banco 
      */
     public function store(Request $request)
     {
-        // 1. Validação: Adicionamos a regra exigindo a 'cor'
+        // Validação dos dados do formulário
         $request->validate([
             'nome' => 'required|string|max:255',
-            'cor'  => 'required|string|max:100', // <--- Validação da Cor aqui!
+            'cor'  => 'required|string|max:100', 
             'preco' => 'required|numeric',
             'quantidade_estoque' => 'required|integer',
         ]);
 
-        // 2. Cria no banco usando os dados validados
+        // Cria no banco usando os dados validados
         Flor::create($request->all());
 
-        // 3. Redireciona com sucesso
+        // Redireciona com sucesso
         return redirect()->route('flores.index')
             ->with('success', 'Flor cadastrada com sucesso!');
     }
@@ -67,23 +67,23 @@ class FlorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // 1. Validação no Update também para garantir a segurança!
+        // Validação no Update para garantir que os dados estão corretos
         $request->validate([
             'nome' => 'required|string|max:255',
-            'cor'  => 'required|string|max:100', // <--- Validação da Cor aqui também!
+            'cor'  => 'required|string|max:100',
             'preco' => 'required|numeric',
             'quantidade_estoque' => 'required|integer',
         ]);
 
-        // 2. Acha a flor no banco de dados
+        // Acha a flor no banco de dados
         $flor = Flor::findOrFail($id);
         
-        // 3. Atualiza os dados
+        // Atualiza os dados
         $flor->update($request->all());
         
-        // 4. Volta para a lista
+        // Volta para a lista
         return redirect()->route('flores.index')
-                         ->with('success', 'Flor atualizada com sucesso!');
+        ->with('success', 'Flor atualizada com sucesso!');
     }
 
     /**
@@ -91,23 +91,23 @@ class FlorController extends Controller
      */
     public function destroy($id)
     {
-        // 1. Bloqueia se não for admin
+        // Bloqueia se não for admin
         if (!auth()->user()->is_admin) {
             return redirect()->back()->withErrors(['erro' => 'Acesso negado!']);
         }
 
         try {
-            // 2. Busca a flor pelo ID
+            // Busca a flor pelo ID
             $flor = Flor::findOrFail($id);
             
-            // 3. Deleta a flor
+            // Deleta a flor
             $flor->delete();
 
-            // 4. Redireciona de volta com sucesso
+            // Redireciona de volta com sucesso
             return redirect()->route('flores.index')->with('success', 'Flor excluída com sucesso!');
 
         } catch (\Exception $e) {
-            // 5. Captura qualquer erro do banco e avisa
+            // Captura qualquer erro do banco e avisa
             return redirect()->back()->withErrors(['erro' => 'Erro ao excluir a flor: ' . $e->getMessage()]);
         }
     }

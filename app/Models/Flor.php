@@ -9,10 +9,9 @@ class Flor extends Model
 {
     use HasFactory;
 
-    // 1. Avisando o Laravel o nome exato da tabela
-    protected $table = 'flores';
+    // Garante que usemeos a tabela correta
 
-    // 2. Liberando as colunas para cadastro em massa (Mass Assignment)
+    // Dados que queremos colertar do cliente
     protected $fillable = [
         'nome',
         'cor',
@@ -22,9 +21,8 @@ class Flor extends Model
         'imagem'
     ];
 
-    // 3. O relacionamento (Uma flor pode estar em vários itens de pedido)
-    // Vamos manter ele aqui preparado!
-    public function itensPedido()
+    // RELACIONAMENTO: Uma flor pode estar em vários itens de pedido N p N
+        public function itensPedido()
     {
         return $this->hasMany(ItemPedido::class);
     }
