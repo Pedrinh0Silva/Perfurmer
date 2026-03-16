@@ -8,7 +8,7 @@
                     <h2 style="font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #1c1917; margin-bottom: 8px; letter-spacing: -0.02em;">
                         Bem-vindo à Perfurmer, {{ ucwords(strtolower(Auth::user()->name)) }} 🌿
                     </h2>
-                    <p style="color: #57534e; font-size: 1.2rem; font-weight: 400;">Aqui está o resumo da sua boutique hoje.</p>
+                    <p style="color: #57534e; font-size: 1.2rem; font-weight: 400;">Aqui está o resumo da sua Floricultura hoje.</p>
                 </div>
 
                 <div style="display: flex; gap: 24px; flex-wrap: wrap;">

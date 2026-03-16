@@ -6,16 +6,12 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
 use Illuminate\Support\Facades\Route;
 
-// Importação dos Models para a Dashboard funcionar
+// Importa Models para a Dashboard funcionar
 use App\Models\Flor;
 use App\Models\Cliente;
 use App\Models\Pedido;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+
 
 // Página inicial de boas-vindas
 Route::get('/', function () {
@@ -24,7 +20,7 @@ Route::get('/', function () {
 
 // Dashboard (Protegido por login) com a coluna de valor corrigida
 Route::get('/dashboard', function () {
-    // Buscando os dados reais das contagens (flores e clientes)
+    // Busca os dados reais das contagens (flores e clientes)
     $totalFlores = Flor::count() ?? 0;
     $totalClientes = Cliente::count() ?? 0;
     

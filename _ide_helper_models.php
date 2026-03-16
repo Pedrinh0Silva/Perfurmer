@@ -48,30 +48,12 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * @property int $id
- * @property string $nome
- * @property string $cor
- * @property string $preco
- * @property int $quantidade_estoque
- * @property string|null $descricao
- * @property string|null $imagem
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ItemPedido> $itensPedido
  * @property-read int|null $itens_pedido_count
  * @method static \Database\Factories\FlorFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Flor newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Flor newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Flor query()
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereCor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereDescricao($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereImagem($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereNome($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor wherePreco($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereQuantidadeEstoque($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Flor whereUpdatedAt($value)
  */
 	class Flor extends \Eloquent {}
 }

@@ -21,7 +21,7 @@ class Flor extends Model
         'imagem'
     ];
 
-    // RELACIONAMENTO: Uma flor pode estar em vários itens de pedido N p N
+    
         public function itensPedido()
     {
         return $this->hasMany(ItemPedido::class);

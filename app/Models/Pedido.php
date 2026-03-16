@@ -16,13 +16,13 @@ class Pedido extends Model
         'data_pedido' => 'datetime',
     ];
 
-    // O pedido pertence a um cliente
+    
     public function cliente()
     {
         return $this->belongsTo(Cliente::class);
     }
 
-    // O pedido tem muitos itens (as flores)
+    
     public function itens()
     {
         return $this->hasMany(ItemPedido::class);

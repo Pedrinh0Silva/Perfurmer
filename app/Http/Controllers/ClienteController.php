@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente; // <--- Importando o Model Cliente
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
     /**
-     * Lista todos os clientes
+     * Lista dos clientes
      */
     public function index()
     {
@@ -33,7 +33,7 @@ class ClienteController extends Controller
             'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:clientes',
             'telefone' => 'nullable|string|max:20',
-            // 👇 Nossas novas regras mágicas aqui! 👇
+           
             'cep' => 'nullable|string|max:10',
             'endereco' => 'nullable|string|max:255',
             'numero' => 'nullable|string|max:20',
@@ -73,7 +73,7 @@ class ClienteController extends Controller
             'nome' => 'required',
             'email' => 'required|email|unique:clientes,email,' . $cliente->id,
             'telefone' => 'required',
-            // 👇 Nossas novas regras mágicas aqui! 👇
+            
             'cep' => 'nullable|string|max:10',
             'endereco' => 'nullable|string|max:255',
             'numero' => 'nullable|string|max:20',

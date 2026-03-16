@@ -7,7 +7,7 @@ use App\Models\ItemPedido;
 use App\Models\Cliente;
 use App\Models\Flor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Importante para usar Transações
+use Illuminate\Support\Facades\DB; 
 
 class PedidoController extends Controller
 {
@@ -16,7 +16,7 @@ class PedidoController extends Controller
      */
     public function index()
     {
-        // O 'with' já traz os dados disponíveis do cliente junto, evitando consultas extras.
+        // traz os dados disponíveis do cliente junto, evitando consultas extras.
         $pedidos = Pedido::with('cliente')->orderBy('created_at', 'desc')->get();      
         return view('pedidos.index', compact('pedidos'));
     }
@@ -33,15 +33,15 @@ class PedidoController extends Controller
     }
 
     /**
-     * PARTE IMPORTANTE: Salva a venda, os itens e baixa o estoque
+     *  Salva a venda, os itens e baixa o estoque
      */
     public function store(Request $request)
     {
-        // 1. Validação blindada: verifica o array e o que tem dentro dele
+        // Validação blindada: verifica o array e o que tem dentro dele
         $request->validate([
             'cliente_id'         => 'required|exists:clientes,id',
             'itens'              => 'required|array|min:1',
-            'itens.*.flor_id'    => 'required|exists:flores,id', // CORRIGIDO AQUI: de 'flors' para 'flores'
+            'itens.*.flor_id'    => 'required|exists:flores,id',
             'itens.*.quantidade' => 'required|integer|min:1',
         ]);
 
@@ -59,7 +59,7 @@ class PedidoController extends Controller
 
                 $totalGeral = 0;
 
-                // 3. Percorre cada item escolhido no formulário
+                // Percorre cada item escolhido no formulário
                 foreach ($request->itens as $itemData) {
                     $flor = Flor::findOrFail($itemData['flor_id']);
                     $quantidade = $itemData['quantidade'];
@@ -82,11 +82,11 @@ class PedidoController extends Controller
                         'subtotal'       => $subtotal
                     ]);
 
-                    // 4. Baixa o Estoque
+                    // Baixa o Estoque
                     $flor->decrement('quantidade_estoque', $quantidade);
                 }
 
-                // 5. Atualiza o valor total do pedido no final
+                // Atualiza o valor total do pedido no final
                 $pedido->update(['valor_total' => $totalGeral]);
             });
 
@@ -124,13 +124,13 @@ class PedidoController extends Controller
             $pedido = Pedido::findOrFail($id);
             
             // Deleta o pedido
-            $pedido->delete();s
+            $pedido->delete();
 
             // Redireciona de volta com sucesso
             return redirect()->route('pedidos.index')->with('success', 'Venda excluída com sucesso!');
 
         } catch (\Exception $e) {
-            // 5. Captura qualquer erro
+            // Captura qualquer erro
             return redirect()->back()->withErrors(['erro' => 'Erro ao excluir a venda: ' . $e->getMessage()]);
         }
     }
