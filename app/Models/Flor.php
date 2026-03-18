@@ -10,7 +10,7 @@ class Flor extends Model
     use HasFactory;
 
     // Garante que usemeos a tabela correta
-
+    protected $table = 'flores';
     // Dados que queremos colertar do cliente
     protected $fillable = [
         'nome',
