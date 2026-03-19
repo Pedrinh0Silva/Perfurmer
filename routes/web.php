@@ -14,9 +14,6 @@ use App\Models\Pedido;
 
 
 // Página inicial de boas-vindas
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Dashboard (Protegido por login) com a coluna de valor corrigida
 Route::get('/dashboard', function () {

@@ -9,7 +9,7 @@ class Pedido extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cliente_id', 'data_pedido', 'valor_total', 'status'];
+    protected $fillable = ['cliente_id', 'data_pedido', 'valor_total', 'status', 'forma_pagamento'];
 
     // Para a data funcionar no formato brasileiro (d/m/Y)
     protected $casts = [

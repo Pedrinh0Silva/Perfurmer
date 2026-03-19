@@ -7,13 +7,13 @@
 </div>
 
 @if($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul class="mb-0">
+        @foreach($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 <div class="card shadow-sm border-success">
@@ -26,9 +26,9 @@
                 <select class="form-select" id="cliente_id" name="cliente_id" required>
                     <option value="">-- Escolha um cliente --</option>
                     @foreach($clientes as $cliente)
-                        <option value="{{ $cliente->id }}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
-                            {{ $cliente->nome }} ({{ $cliente->email }})
-                        </option>
+                    <option value="{{ $cliente->id }}" {{ old('cliente_id') == $cliente->id ? 'selected' : '' }}>
+                        {{ $cliente->nome }} ({{ $cliente->email }})
+                    </option>
                     @endforeach
                 </select>
             </div>
@@ -43,9 +43,9 @@
                         <select class="form-select" id="flor_selector">
                             <option value="">-- Escolha uma flor --</option>
                             @foreach($flores as $flor)
-                                <option value="{{ $flor->id }}" data-preco="{{ $flor->preco }}" data-nome="{{ $flor->nome }}" data-estoque="{{ $flor->quantidade_estoque }}">
-                                    {{ $flor->nome }} - R$ {{ number_format($flor->preco, 2, ',', '.') }} (Estoque: {{ $flor->quantidade_estoque }})
-                                </option>
+                            <option value="{{ $flor->id }}" data-preco="{{ $flor->preco }}" data-nome="{{ $flor->nome }}" data-estoque="{{ $flor->quantidade_estoque }}">
+                                {{ $flor->nome }} - R$ {{ number_format($flor->preco, 2, ',', '.') }} (Estoque: {{ $flor->quantidade_estoque }})
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -61,6 +61,18 @@
                 </div>
             </div>
 
+            {{--Forma de Pagamentos--}}
+            <div>
+                <label for="forma_pagamento" class="form-label text-success fw-bold">3. Forma de Pagamento</label>
+                <select class="form-select mb-4" id="forma_pagamento" name="forma_pagamento">
+                    <option value="">-- Selecione a forma de pagamento --</option>
+                    <option value="Cartão de Crédito" {{ old('forma_pagamento') == 'Cartão de Crédito' ? 'selected' : '' }}>Cartão de Crédito</option>
+                    <option value="Cartão de Débito" {{ old('forma_pagamento') == 'Cartão de Débito' ? 'selected' : '' }}>Cartão de Débito</option>
+                    <option value="Pix" {{ old('forma_pagamento') == 'Pix' ? 'selected' : '' }}>Pix</option>
+                </select>
+            </div>
+
+
             <div class="table-responsive mb-4">
                 <table class="table table-bordered table-hover align-middle">
                     <thead class="table-light">
@@ -68,12 +80,13 @@
                             <th>Produto</th>
                             <th class="text-center">Qtd</th>
                             <th class="text-end">Preço Un.</th>
+                            <th class="text-end">Forma de Pagamento</th>
                             <th class="text-end">Subtotal</th>
                             <th class="text-center">Ação</th>
                         </tr>
                     </thead>
                     <tbody id="carrinho-body">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
 
@@ -88,13 +101,17 @@
     </div>
 </div>
 
+
+
+
+
 <script>
     let carrinho = [];
 
     function adicionarAoCarrinho() {
         const selector = document.getElementById('flor_selector');
         const option = selector.options[selector.selectedIndex];
-        
+
         if (!option.value) {
             alert('Por favor, selecione uma flor primeiro.');
             return;
@@ -118,7 +135,7 @@
         };
 
         const indexExistente = carrinho.findIndex(item => item.id === flor.id);
-        
+
         if (indexExistente >= 0) {
             if ((carrinho[indexExistente].quantidade + flor.quantidade) > flor.estoque) {
                 alert(`Estoque insuficiente! O máximo para ${flor.nome} é de ${flor.estoque} unidades.`);
@@ -187,7 +204,7 @@
             alert('Adicione pelo menos uma flor antes de finalizar a venda!');
             return;
         }
-        
+
         const clienteSelect = document.getElementById('cliente_id');
         if (!clienteSelect.value) {
             alert('Selecione o cliente para a venda.');
