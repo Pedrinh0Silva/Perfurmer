@@ -5,10 +5,19 @@
     <h2>Cadastrar Nova Flor</h2>
     <a href="{{ route('flores.index') }}" class="btn btn-secondary">Voltar</a>
 </div>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <div class="card shadow-sm">
     <div class="card-body">
-        <form action="{{ route('flores.store') }}" method="POST">
+        <form action="{{ route('flores.store') }}" method="POST" enctype="multipart/form-data">
             
             @csrf
 
@@ -35,8 +44,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="foto">Selecione uma foto</label>
-                    <img src="{{ asset('storage/public/flores/ .' . $flor->imagem_path) }}" alt="Foto da Flor" class="img-thumbnail mb-2">
-                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                   <input type="file" name="imagem" class="form-control">
                 </div>
                 <div class="col-md-6">
                     <label for="quantidade_estoque" class="form-label">Quantidade em Estoque</label>
