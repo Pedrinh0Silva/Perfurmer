@@ -34,8 +34,18 @@ class FlorController extends Controller
             'nome' => 'required|string|max:255',
             'cor'  => 'required|string|max:100', 
             'preco' => 'required|numeric',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'quantidade_estoque' => 'required|integer',
         ]);
+         if($request->hasFile('imagem')) {
+            $path = $request->file('imagem')->store('flores', 'public');
+            $request->merge(['imagem' => $path]);
+        }
+        Flor::create($request->all(
+            'nome' ->$request->nome,
+             'imagem_path' -> $path
+            
+        ));
 
         // Cria no banco usando os dados validados
         Flor::create($request->all());
@@ -72,8 +82,10 @@ class FlorController extends Controller
             'nome' => 'required|string|max:255',
             'cor'  => 'required|string|max:100',
             'preco' => 'required|numeric',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'quantidade_estoque' => 'required|integer',
         ]);
+       
 
         // Acha a flor no banco de dados
         $flor = Flor::findOrFail($id);

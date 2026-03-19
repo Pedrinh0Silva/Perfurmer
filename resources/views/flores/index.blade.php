@@ -13,6 +13,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Imagem</th>
                     <th>Nome</th>
                     <th>Cor</th> <th>Preço</th>
                     <th>Estoque</th>
@@ -23,6 +24,7 @@
                 @forelse($flores as $flor)
                     <tr>
                         <td>{{ $flor->id }}</td>
+                        <td><img src="{{ asset('storage/' . $flor->imagem) }}" alt="imagem" width="100"></td>
                         <td>{{ $flor->nome }}</td>
                         <td>{{ $flor->cor }}</td> <td>R$ {{ number_format($flor->preco, 2, ',', '.') }}</td>
                         <td>{{ $flor->quantidade_estoque }}</td>

@@ -34,6 +34,11 @@
                     <input type="number" step="0.01" class="form-control" id="preco" name="preco" required>
                 </div>
                 <div class="col-md-6">
+                    <label for="foto">Selecione uma foto</label>
+                    <img src="{{ asset('storage/public/flores/ .' . $flor->imagem_path) }}" alt="Foto da Flor" class="img-thumbnail mb-2">
+                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                </div>
+                <div class="col-md-6">
                     <label for="quantidade_estoque" class="form-label">Quantidade em Estoque</label>
                     <input type="number" class="form-control" id="quantidade_estoque" name="quantidade_estoque" required>
                 </div>
