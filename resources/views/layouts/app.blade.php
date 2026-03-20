@@ -20,6 +20,18 @@
             .card { border-radius: 15px; border: none; }
             .btn-primary { background-color: #4a6741 !important; border-color: #4a6741 !important; } /* Verde Botânico */
             .btn-primary:hover { background-color: #3a5233 !important; }
+            .navbar-brand{font-weight:800; 
+            font-size:1.5rem;
+            
+            background-color: #e9f5e9; 
+            border-bottom: 4px solid #4a6741; 
+            font-size-adjust: 900%;
+             
+            border-right: 4px solid #4a6741;
+            letter-spacing: 1px;
+            border-bottom-left-radius: 20px !important;
+            border-bottom-right-radius: 20px !important;}
+            .nav-item { color: #2d4739 !important; font-weight: 500; }
         </style>
     </head>
     <body class="font-sans antialiased bg-stone-50 text-gray-800"> 
