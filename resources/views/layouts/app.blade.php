@@ -19,7 +19,7 @@
     <style>
         /* Pequeno ajuste para títulos ficarem com cara de boutique */
         h1,
-        h2,
+
         h3,
         .navbar-brand {
             font-family: 'Playfair Display', serif;
@@ -47,8 +47,8 @@
             font-family: 'Figtree', sans-serif;
         }
 
-        /body {
-            background: linear-gradient(135deg, #f8faf9 0%, #f1f4f0 100%) !important;
+        body {
+            background: linear-gradient(135deg, #edfcf5f8 0%, #f1f4f0 100%) !important;
             font-family: 'Figtree', sans-serif;
             color: #2d3748;
         }
@@ -56,8 +56,9 @@
         /* 2. Navbar com Efeito "Glass" (Vidro) */
         nav,
         .bg-white.border-b {
-            background: rgba(163, 202, 137, 0.8) !important;
+            background: rgba(235, 250, 244, 0.986) !important;
             backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(153, 196, 136, 0.8) !important;
             /* Efeito de desfoque profissional */
             border-bottom: 1px solid rgba(74, 103, 65, 0.1) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03) !important;
@@ -65,24 +66,27 @@
 
         /* 3. Cards Premium (Efeito Flutuante) */
         .card {
-            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border: 1px solid rgba(153, 196, 136, 0.8) !important;
+            margin-top: 55px !important;
             /* Borda interna de brilho */
             border-radius: 24px !important;
             background: #ffffff !important;
             box-shadow: 0 15px 35px -5px rgba(45, 71, 57, 0.08) !important;
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
+       
 
         .card:hover {
             transform: translateY(-8px);
             box-shadow: 0 25px 45px -10px rgba(74, 103, 65, 0.15) !important;
+            
         }
 
         /* 4. Tipografia de Título (Diferenciada) */
         h1,
         .navbar-brand span {
             font-family: 'Playfair Display', serif !important;
-            /* Fonte elegante de boutique */
+
             letter-spacing: -0.5px;
             color: #1a2e23 !important;
         }
@@ -93,12 +97,45 @@
             border: none !important;
             border-radius: 12px !important;
             padding: 10px 24px !important;
-            font-weight: 600 !important;
+            font-weight: 400 !important;
             box-shadow: 0 4px 15px rgba(74, 103, 65, 0.2) !important;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-primary:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 8px 20px rgba(74, 103, 65, 0.3) !important;
+            transform: scale(1.02);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #5b8451 0%, #4a6741 100%) !important;
+            border: none !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Transição suave */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px !important;
+            padding: 5px 24px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(91, 132, 81, 0.2) !important;
+            transition: all 0.3s ease;
+        }
+        .btn-success:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 8px 20px rgba(91, 132, 81, 0.3) !important;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 15px rgba(74, 103, 65, 0.2);
+        }
+        .btn-sm {
+           
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 5px 24px !important;
+            font-weight: 400 !important;
+            box-shadow: 0 4px 15px rgba(74, 103, 65, 0.2) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-sm:hover {
             filter: brightness(1.1);
             box-shadow: 0 8px 20px rgba(74, 103, 65, 0.3) !important;
             transform: scale(1.02);
@@ -158,7 +195,7 @@
             /* Cria espaço entre as linhas */
         }
 
-        .table thead th {
+        .body.table thead th {
             border: none !important;
             color: #4a6741 !important;
             /* Verde botânico nos títulos */
@@ -169,20 +206,24 @@
             padding-bottom: 15px !important;
         }
 
-        .table tbody tr {
-            background-color: #ffffff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        .body .table tbody tr {
+            background-color: #4a6741 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
             /* Sombra leve em cada linha */
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease !important;
+        }
+        .body .table table:hover {
+            background-color: #4a6741 !important;
+
         }
 
-        .table tbody tr:hover {
+        .body .table tbody tr:hover {
             transform: translateY(-3px);
             /* Linha "levita" no hover */
-            background-color: #fbfdfb !important;
+            background-color: #4a6741 !important;
         }
 
-        .table tbody td {
+        .body .table tbody td {
             border: none !important;
             vertical-align: middle !important;
             /* Centraliza tudo verticalmente */
@@ -191,16 +232,16 @@
         }
 
         /* Bordas arredondadas nas pontas das linhas */
-        .table tbody tr td:first-child {
+        .body .table tbody tr td:first-child {
             border-radius: 12px 0 0 12px !important;
         }
 
-        .table tbody tr td:last-child {
+        .body .table tbody tr td:last-child {
             border-radius: 0 12px 12px 0 !important;
         }
 
         /* 3. Ajuste dos Botões de Ação */
-        .table .btn-sm {
+        .body .table .btn-sm {
             border-radius: 8px !important;
             padding: 5px 15px !important;
             font-size: 0.75rem;
@@ -218,7 +259,7 @@
         .card h3,
         .bg-white h2 {
             color: #1a2e23 !important;
-            /* Verde escuro botânico */
+
         }
 
         /* Ajuste para os Inputs (caso o texto digitado esteja branco também) */
@@ -228,8 +269,6 @@
             /* Texto preto/grafite ao digitar */
             background-color: #ffffff !important;
         }
-
-      
     </style>
 </head>
 
