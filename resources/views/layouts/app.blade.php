@@ -74,12 +74,23 @@
             box-shadow: 0 15px 35px -5px rgba(45, 71, 57, 0.08) !important;
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-       
+
+        .d-flex h2 {
+            color: #2c3e50;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: none;
+            font-size: 1.75rem;
+        }
+
+        .py-4 {
+            border: 1px solid rgba(153, 196, 136, 0.8) !important;
+        }
 
         .card:hover {
             transform: translateY(-8px);
             box-shadow: 0 25px 45px -10px rgba(74, 103, 65, 0.15) !important;
-            
+
         }
 
         /* 4. Tipografia de Título (Diferenciada) */
@@ -120,14 +131,16 @@
             box-shadow: 0 4px 15px rgba(91, 132, 81, 0.2) !important;
             transition: all 0.3s ease;
         }
+
         .btn-success:hover {
             filter: brightness(1.1);
             box-shadow: 0 8px 20px rgba(91, 132, 81, 0.3) !important;
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 10px 15px rgba(74, 103, 65, 0.2);
         }
+
         .btn-sm {
-           
+
             border: none !important;
             border-radius: 12px !important;
             padding: 5px 24px !important;
@@ -135,6 +148,7 @@
             box-shadow: 0 4px 15px rgba(74, 103, 65, 0.2) !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .btn-sm:hover {
             filter: brightness(1.1);
             box-shadow: 0 8px 20px rgba(74, 103, 65, 0.3) !important;
@@ -212,6 +226,7 @@
             /* Sombra leve em cada linha */
             transition: transform 0.2s ease !important;
         }
+
         .body .table table:hover {
             background-color: #4a6741 !important;
 

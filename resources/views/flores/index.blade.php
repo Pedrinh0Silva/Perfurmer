@@ -3,7 +3,9 @@
 @section('conteudo')
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Lista de Flores</h2>
+        <h2 class="fs-3 fw-light text-muted text-uppercase" style="letter-spacing: 2px;">
+            Lista de Flores
+        </h2>
         <a href="{{ route('flores.create') }}" class="btn btn-success">Nova Flor</a>
     </div>
 
