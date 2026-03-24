@@ -117,10 +117,11 @@ class FlorController extends Controller
 
             // Redireciona de volta com sucesso
             return redirect()->route('flores.index')->with('success', 'Flor excluída com sucesso!');
-
         } catch (\Exception $e) {
             // Captura qualquer erro do banco e avisa
             return redirect()->back()->withErrors(['erro' => 'Erro ao excluir a flor: ' . $e->getMessage()]);
         }
     }
+
+    
 }

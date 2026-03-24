@@ -43,6 +43,7 @@ class PedidoController extends Controller
             'itens'              => 'required|array|min:1',
             'itens.*.flor_id'    => 'required|exists:flores,id',
             'itens.*.quantidade' => 'required|integer|min:1',
+            'forma_pagamento'    => 'nullable|string|max:100',
         ]);
 
         try {
@@ -54,7 +55,8 @@ class PedidoController extends Controller
                     'cliente_id'  => $request->cliente_id,
                     'data_pedido' => now(),
                     'valor_total' => 0, // Vamos atualizar logo abaixo
-                    'status'      => 'realizado'
+                    'status'      => 'realizado',
+                    'forma_pagamento' => $request->forma_pagamento ?? 'Não especificada'
                 ]);
 
                 $totalGeral = 0;
@@ -79,7 +81,8 @@ class PedidoController extends Controller
                         'flor_id'        => $flor->id,
                         'quantidade'     => $quantidade,
                         'preco_unitario' => $flor->preco,
-                        'subtotal'       => $subtotal
+                        'subtotal'       => $subtotal,
+                        'forma_pagamento' => $request->forma_pagamento ?? 'Não especificada',
                     ]);
 
                     // Baixa o Estoque
