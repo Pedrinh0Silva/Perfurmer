@@ -206,8 +206,48 @@
         /* 2. Estilização da Tabela (Menos Excel, Mais Boutique) */
         .table {
             border-collapse: separate;
-            border-spacing: 0 8px;
-            /* Cria espaço entre as linhas */
+            border-spacing: 0 12px;
+            /* Espaço entre as linhas para parecerem cards individuais */
+            margin-top: -12px;
+        }
+
+        .table thead th {
+            border: none !important;
+            color: #4a6741 !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            padding: 15px !important;
+        }
+
+        .table tbody tr {
+            background-color: #ffffff !important;
+            /* Fundo branco para as linhas */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03) !important;
+            transition: transform 0.2s ease-in-out !important;
+        }
+
+        .table tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(74, 103, 65, 0.1) !important;
+        }
+
+        .table tbody td {
+            border: none !important;
+            vertical-align: middle !important;
+            padding: 15px !important;
+            background: white;
+            /* Garante que o fundo não herde cores indesejadas */
+        }
+
+        /* Arredondamento das pontas das linhas */
+        .table tbody tr td:first-child {
+            border-radius: 15px 0 0 15px !important;
+        }
+
+        .table tbody tr td:last-child {
+            border-radius: 0 15px 15px 0 !important;
         }
 
         .body.table thead th {
