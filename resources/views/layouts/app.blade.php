@@ -84,7 +84,8 @@
         }
 
         .py-4 {
-            border: 1px solid rgba(153, 196, 136, 0.8) !important;
+            color: #7eca6bd8;
+            background-color: 1px solid rgba(153, 196, 136, 0.8) !important;
         }
 
         .card:hover {
