@@ -5,6 +5,8 @@ use App\Http\Controllers\FlorController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
 use Illuminate\Support\Facades\Route;
+use App\Exports\FlorExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 // Importa Models para a Dashboard funcionar
 use App\Models\Flor;
@@ -14,9 +16,6 @@ use App\Models\Pedido;
 
 
 // Página inicial de boas-vindas
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Dashboard (Protegido por login) com a coluna de valor corrigida
 Route::get('/dashboard', function () {
@@ -48,11 +47,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     // Suas rotas do Sistema (Flores, Clientes e Pedidos)
     Route::resource('flores', FlorController::class);
     Route::resource('clientes', ClienteController::class);
     Route::resource('pedidos', PedidoController::class);
+    
+    Route::get('/export-flores', function() {
+
+        
+        $flores = Flor::all();
+        $csvData = "ID,Nome,Cor,Preço,Quantidade Estoque\n";
+
+        foreach ($flores as $flor) {
+            $csvData .= "{$flor->id},\"{$flor->nome}\",\"{$flor->cor}\",{$flor->preco},{$flor->quantidade_estoque}\n";
+        }
+
+        $fileName = 'Relatorio' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        return Excel::download(new FlorExport, $fileName);
+    })->name('flores.export');   
+
 
 });
 

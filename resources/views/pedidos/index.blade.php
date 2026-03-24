@@ -6,6 +6,14 @@
     <a href="{{ route('pedidos.create') }}" class="btn btn-success">Nova Venda</a>
 </div>
 
+  <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0">Exportar</h2>
+
+        <a href="{{ route('flores.export') }}" class="btn btn-success">
+            Exportar Vendas
+        </a>
+    </div>
+
 <div class="card shadow-sm">
     <div class="card-body">
         <table class="table table-hover align-middle">

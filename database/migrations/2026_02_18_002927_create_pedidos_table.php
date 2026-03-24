@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('status', 30)->default('Pendente');
             
             $table->timestamps();
+
+            $table->string("forma_pagamento")->default("Não especificada");
         });
     }
 

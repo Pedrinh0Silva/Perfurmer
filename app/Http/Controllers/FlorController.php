@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Flor; 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\FlorExport;
+use App\Models\Flor;
 use Illuminate\Http\Request;
 
 class FlorController extends Controller
@@ -32,7 +34,7 @@ class FlorController extends Controller
         // Validação dos dados do formulário
         $request->validate([
             'nome' => 'required|string|max:255',
-            'cor'  => 'required|string|max:100', 
+            'cor'  => 'required|string|max:100',
             'preco' => 'required|numeric',
             'quantidade_estoque' => 'required|integer',
         ]);
@@ -77,13 +79,13 @@ class FlorController extends Controller
 
         // Acha a flor no banco de dados
         $flor = Flor::findOrFail($id);
-        
+
         // Atualiza os dados
         $flor->update($request->all());
-        
+
         // Volta para a lista
         return redirect()->route('flores.index')
-        ->with('success', 'Flor atualizada com sucesso!');
+            ->with('success', 'Flor atualizada com sucesso!');
     }
 
     /**
@@ -99,16 +101,17 @@ class FlorController extends Controller
         try {
             // Busca a flor pelo ID
             $flor = Flor::findOrFail($id);
-            
+
             // Deleta a flor
             $flor->delete();
 
             // Redireciona de volta com sucesso
             return redirect()->route('flores.index')->with('success', 'Flor excluída com sucesso!');
-
         } catch (\Exception $e) {
             // Captura qualquer erro do banco e avisa
             return redirect()->back()->withErrors(['erro' => 'Erro ao excluir a flor: ' . $e->getMessage()]);
         }
     }
+
+    
 }
