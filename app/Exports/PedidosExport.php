@@ -9,15 +9,14 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Carbon\Carbon;
 
-class PedidosExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
+class PedidosExport implements FromCollection
 {
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        // Se você tiver o relacionamento configurado no Model Pedido, 
-        // use Pedido::with('cliente')->get() para evitar o problema de N+1 queries.
+    
         return Pedido::all();
     }
 
