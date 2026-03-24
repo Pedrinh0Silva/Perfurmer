@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Suas rotas do Sistema (Flores, Clientes e Pedidos)
+    Route::post('flores/{flor}', [FlorController::class, 'update'])->name('flores.update');
     Route::resource('flores', FlorController::class);
     Route::resource('clientes', ClienteController::class);
     Route::resource('pedidos', PedidoController::class);

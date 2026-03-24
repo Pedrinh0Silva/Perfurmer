@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\FlorExport;
 use App\Models\Flor;
 use Illuminate\Http\Request;
 
@@ -32,15 +30,22 @@ class FlorController extends Controller
     public function store(Request $request)
     {
         // Validação dos dados do formulário
-        $request->validate([
+        $dados = $request->validate([
             'nome' => 'required|string|max:255',
-            'cor'  => 'required|string|max:100',
+            'cor' => 'required|string|max:100',
             'preco' => 'required|numeric',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'quantidade_estoque' => 'required|integer',
         ]);
+        if ($request->hasFile('imagem')) {
+            $path = $request->file('imagem')->store('flores', 'public');
+            $dados['imagem'] = $path;
+        }
+
+
 
         // Cria no banco usando os dados validados
-        Flor::create($request->all());
+        Flor::create($dados);
 
         // Redireciona com sucesso
         return redirect()->route('flores.index')
@@ -69,19 +74,24 @@ class FlorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validação no Update para garantir que os dados estão corretos
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            'cor'  => 'required|string|max:100',
-            'preco' => 'required|numeric',
-            'quantidade_estoque' => 'required|integer',
-        ]);
-
         // Acha a flor no banco de dados
         $flor = Flor::findOrFail($id);
-
+        // Validação no Update para garantir que os dados estão corretos
+        $dados = $request->validate([
+            'nome' => 'required|string|max:255',
+            'cor' => 'required|string|max:100',
+            'preco' => 'required|numeric',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'quantidade_estoque' => 'required|integer',
+        ]);
+        if ($request->hasFile('imagem')) {
+            $path = $request->file('imagem')->store('flores', 'public');
+            $dados['imagem'] = $path;
+        } else {
+            unset($dados['imagem']);
+        }
         // Atualiza os dados
-        $flor->update($request->all());
+        $flor->update($dados);
 
         // Volta para a lista
         return redirect()->route('flores.index')

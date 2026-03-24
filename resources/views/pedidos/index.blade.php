@@ -16,7 +16,7 @@
 
 <div class="card shadow-sm">
     <div class="card-body">
-        <table class="table table-hover align-middle">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Nº Pedido</th>

@@ -3,25 +3,11 @@
 @section('conteudo')
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Lista de Flores</h2>
+        <h2 class="fs-3 fw-light text-muted text-uppercase" style="letter-spacing: 2px;">
+            Lista de Flores
+        </h2>
         <a href="{{ route('flores.create') }}" class="btn btn-success">Nova Flor</a>
-
     </div>
-
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="m-0">Exportar</h2>
-
-        <a href="{{ route('flores.export') }}" class="btn btn-success">
-            Exportar Flores
-        </a>
-    </div>
-
-
-    <div>
-
-    </div>
-
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -29,6 +15,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Imagem</th>
                         <th>Nome</th>
                         <th>Cor</th>
                         <th>Preço</th>
@@ -40,6 +27,11 @@
                     @forelse($flores as $flor)
                         <tr>
                             <td>{{ $flor->id }}</td>
+                            <td class="text-center">
+                                <div class="flor-thumb-container mx-auto"> <img src="{{ asset('storage/' . $flor->imagem) }}"
+                                        alt="{{ $flor->nome }}">
+                                </div>
+                            </td>
                             <td>{{ $flor->nome }}</td>
                             <td>{{ $flor->cor }}</td>
                             <td>R$ {{ number_format($flor->preco, 2, ',', '.') }}</td>
@@ -57,15 +49,6 @@
                                         </form>
                                     @endif
                                 @endauth
-
-
-
-
-
-
-
-
-
                             </td>
                         </tr>
                     @empty
