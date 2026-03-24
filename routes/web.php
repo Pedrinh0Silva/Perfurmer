@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
             $csvData .= "{$flor->id},\"{$flor->nome}\",\"{$flor->cor}\",{$flor->preco},{$flor->quantidade_estoque}\n";
         }
 
-        $fileName = 'flores_export_' . date('Y-m-d_H-i-s') . '.xlsx';
+        $fileName = 'Relatorio' . date('Y-m-d_H-i-s') . '.xlsx';
 
         return Excel::download(new FlorExport, $fileName);
     })->name('flores.export');   
