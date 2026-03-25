@@ -7,7 +7,7 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="m-0"></h2>
+    <h2 class="m-0">Exportar</h2>
     <a href="{{ route('flores.export') }}" class="btn btn-success">
         Exportar Vendas
     </a>
@@ -35,23 +35,38 @@
                         <td>R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}</td>
                         <td><span class="badge bg-success">{{ ucfirst($pedido->status) }}</span></td>
                         <td>
-                            <a href="{{ route('pedidos.show', $pedido->id) }}" class="btn btn-sm btn-outline-primary">Ver Recibo</a>
-                            
-                            @auth
-                                @if(Auth::user()->is_admin)
-                                    <form action="{{ route('pedidos.destroy', $pedido->id) }}" method="POST" class="d-inline"
-                                        onsubmit="return confirm('Tem certeza que deseja excluir esta venda permanentemente?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('pedidos.ocultar', $pedido->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-warning">Ocultar</button>
-                                    </form>
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('pedidos.show', $pedido->id) }}" class="btn btn-sm btn-outline-primary">Ver Recibo</a>
+                                
+                                @if(auth()->check() && auth()->user()->is_admin)
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModalPedido-{{ $pedido->id }}">
+                                        Excluir
+                                    </button>
+
+                                    <div class="modal fade" id="deleteModalPedido-{{ $pedido->id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ $pedido->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel-{{ $pedido->id }}">Confirmar Exclusão</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                                </div>
+                                                <div class="modal-body text-wrap text-break">
+                                                    Tem certeza que deseja excluir a venda <strong>#{{ $pedido->id }}</strong> do cliente <strong>{{ $pedido->cliente->nome }}</strong>? Esta ação não pode ser desfeita.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    
+                                                    <form action="{{ route('pedidos.destroy', $pedido->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
-                            @endauth
+                            </div>
                         </td>
                     </tr>
                 @empty
