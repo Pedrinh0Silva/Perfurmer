@@ -28,8 +28,8 @@
                         <tr>
                             <td>{{ $flor->id }}</td>
                             <td class="text-center">
-                                <div class="flor-thumb-container mx-auto"> <img src="{{ asset('storage/' . $flor->imagem) }}"
-                                        alt="{{ $flor->nome }}">
+                                <div class="flor-thumb-container mx-auto">
+                                    <img src="{{ asset('storage/' . $flor->imagem) }}" alt="{{ $flor->nome }}">
                                 </div>
                             </td>
                             <td>{{ $flor->nome }}</td>
@@ -42,10 +42,15 @@
                                 @auth
                                     @if(Auth::user()->is_admin)
                                         <form action="{{ route('flores.destroy', $flor->id) }}" method="POST" class="d-inline"
-                                            onsubmit="return confirm('Tem certeza que deseja excluir esta flor?');">
+                                            onsubmit="return confirm('Tem certeza que deseja excluir esta flor do banco de dados?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('flores.ocultar', $flor->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-warning">Ocultar</button>
                                         </form>
                                     @endif
                                 @endauth
@@ -53,7 +58,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted">Nenhuma flor cadastrada ainda.</td>
+                            <td colspan="7" class="text-center text-muted">Nenhuma flor cadastrada ainda.</td>
                         </tr>
                     @endforelse
                 </tbody>

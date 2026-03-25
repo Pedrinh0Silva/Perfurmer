@@ -36,13 +36,20 @@
                             <div class="d-flex gap-2">
                                 <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-primary">Editar</a>
                                 
-                                @if(auth()->check() && auth()->user()->is_admin)
-                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                                    </form>
-                                @endif
+                                @auth
+                                    @if(auth()->user()->is_admin)
+                                        <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('clientes.ocultar', $cliente->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-warning">Ocultar</button>
+                                        </form>
+                                    @endif
+                                @endauth
                             </div>
                         </td>
                     </tr>
