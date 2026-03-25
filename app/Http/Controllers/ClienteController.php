@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
+    //Função feita para ocultar um cliente da visualização do usuário, sem excluir o cliente do banco de dados
     public function ocultar($id)
     {
         $item = Cliente::findOrFail($id);
@@ -20,8 +21,10 @@ class ClienteController extends Controller
     /**
      * Lista dos clientes
      */
+
     public function index()
     {
+        //Adcionado if para "tirar" os dados da tela caso sejam ocultados por um usuário comum, e mostrar tudo para o admin
         $user = auth()->user();
 
         if ($user->is_admin) {
