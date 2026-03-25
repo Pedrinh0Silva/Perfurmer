@@ -37,11 +37,32 @@
                                 <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-primary">Editar</a>
                                 
                                 @if(auth()->check() && auth()->user()->is_admin)
-                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este cliente?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                                    </form>
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModalCliente-{{ $cliente->id }}">
+                                        Excluir
+                                    </button>
+
+                                    <div class="modal fade" id="deleteModalCliente-{{ $cliente->id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ $cliente->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel-{{ $cliente->id }}">Confirmar Exclusão</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                                </div>
+                                                <div class="modal-body text-wrap text-break">
+                                                    Tem certeza que deseja excluir o cliente <strong>{{ $cliente->nome }}</strong>? Esta ação não pode ser desfeita.
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    
+                                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         </td>
