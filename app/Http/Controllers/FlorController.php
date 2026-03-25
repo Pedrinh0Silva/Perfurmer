@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Flor;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FlorController extends Controller
@@ -10,9 +11,30 @@ class FlorController extends Controller
     /**
      * Mostra a lista de todas as flores
      */
+    public function ocultar($id)
+    {
+        $item = Flor::findOrFail($id);
+        $user = auth()->user();
+
+        $user->floresOcultas()->attach($item->id);
+
+        return redirect()->back()->with('success', 'Item removido da sua visualização!');
+
+    }
     public function index()
     {
-        $flores = Flor::all();
+        $user = auth()->user();
+
+        // Se for Admin, traz todas as flores
+        if ($user->is_admin) {
+            $flores = Flor::all();
+        } else {
+            // Se for User, traz apenas as flores que NÃO estão na lista de ocultas dele
+            $flores = Flor::whereDoesntHave('usuariosQueOcultaram', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->get();
+        }
+
         return view('flores.index', compact('flores'));
     }
 
@@ -104,8 +126,12 @@ class FlorController extends Controller
     public function destroy($id)
     {
         // Bloqueia se não for admin
-        if (!auth()->user()->is_admin) {
-            return redirect()->back()->withErrors(['erro' => 'Acesso negado!']);
+        $user = auth()->user();
+        // : Bloqueia se não for admin
+        if (!$user->is_admin) {
+            $user->floresOcultas()->syncWithoutDetaching([$id]);
+
+            return redirect()->route('flores.index')->with('success', 'Item removido da sua lista.');
         }
 
         try {
@@ -123,5 +149,5 @@ class FlorController extends Controller
         }
     }
 
-    
+
 }

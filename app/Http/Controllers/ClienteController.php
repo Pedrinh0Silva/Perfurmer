@@ -7,12 +7,31 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
+    public function ocultar($id)
+    {
+        $item = Cliente::findOrFail($id);
+        $user = auth()->user();
+
+
+        $user->clientesOcultos()->attach($item->id);
+
+        return redirect()->back()->with('success', 'Item removido da sua visualização!');
+    }
     /**
      * Lista dos clientes
      */
     public function index()
     {
-        $clientes = Cliente::all();
+        $user = auth()->user();
+
+        if ($user->is_admin) {
+            $clientes = Cliente::all();
+        } else {
+            $clientes = Cliente::whereDoesntHave('usuariosQueOcultaram', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->get();
+        }
+
         return view('clientes.index', compact('clientes'));
     }
 
@@ -33,7 +52,7 @@ class ClienteController extends Controller
             'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:clientes',
             'telefone' => 'nullable|string|max:20',
-           
+
             'cep' => 'nullable|string|max:10',
             'endereco' => 'nullable|string|max:255',
             'numero' => 'nullable|string|max:20',
@@ -73,7 +92,7 @@ class ClienteController extends Controller
             'nome' => 'required',
             'email' => 'required|email|unique:clientes,email,' . $cliente->id,
             'telefone' => 'required',
-            
+
             'cep' => 'nullable|string|max:10',
             'endereco' => 'nullable|string|max:255',
             'numero' => 'nullable|string|max:20',
@@ -93,15 +112,18 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
+        $user = auth()->user();
         // : Bloqueia se não for admin
-        if (!auth()->user()->is_admin) {
-            return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir.']);
+        if (!$user->is_admin) {
+            $user->floresOcultas()->syncWithoutDetaching([$id]);
+
+            return redirect()->route('flores.index')->with('success', 'Item removido da sua lista.');
         }
 
         try {
             //  Busca o cliente no banco
             $cliente = Cliente::findOrFail($id);
-            
+
             //  Tenta excluir
             $cliente->delete();
 

@@ -48,11 +48,39 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Suas rotas do Sistema (Flores, Clientes e Pedidos)
+    // Rotas do Sistema (Flores)
     Route::post('flores/{flor}', [FlorController::class, 'update'])->name('flores.update');
-    Route::resource('flores', FlorController::class);
-    Route::resource('clientes', ClienteController::class);
-    Route::resource('pedidos', PedidoController::class);
+    Route::get('/flores', [FlorController::class, 'index'])->name('flores.index');
+    Route::get('/flores/create', [FlorController::class, 'create'])->name('flores.create');
+    Route::post('/flores', [FlorController::class, 'store'])->name('flores.store');
+    Route::get('/flores/{id}/edit', [FlorController::class, 'edit'])->name('flores.edit');
+    Route::post('/flores/{id}/ocultar', [FlorController::class, 'ocultar'])->name('flores.ocultar');
+
+    // Rotas do Sistema (Clientes)
+    Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+    Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
+    Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
+    Route::get('/clientes/{id}', [ClienteController::class, 'show'])->name('clientes.show');
+    Route::get('/clientes/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
+    Route::patch('/clientes/{id}', [ClienteController::class, 'update'])->name('clientes.update');
+    Route::post('/clientes/{id}/ocultar', [ClienteController::class, 'ocultar'])->name('clientes.ocultar');
+
+    // Rotas do Sistema (Pedidos)
+    Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos.index');
+    Route::get('/pedidos/create', [PedidoController::class, 'create'])->name('pedidos.create');
+    Route::post('/pedidos', [PedidoController::class, 'store'])->name('pedidos.store');
+    Route::get('/pedidos/{id}', [PedidoController::class, 'show'])->name('pedidos.show');
+    Route::get('/pedidos/{id}/edit', [PedidoController::class, 'edit'])->name('pedidos.edit');
+    Route::patch('/pedidos/{id}', [PedidoController::class, 'update'])->name('pedidos.update');
+    Route::post('/pedidos/{id}/ocultar', [PedidoController::class, 'ocultar'])->name('pedidos.ocultar');
+
+    Route::middleware('checkAdmin')->group(function () {
+        Route::delete('/flores/{id}', [FlorController::class, 'destroy'])->name('flores.destroy');
+        Route::delete('/pedidos/{id}', [PedidoController::class, 'destroy'])->name('pedidos.destroy');
+        Route::delete('/clientes/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+    });
+    
+    
     
     Route::get('/export-flores', function() {
 
