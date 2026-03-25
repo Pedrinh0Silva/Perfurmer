@@ -13,8 +13,6 @@ use App\Models\Flor;
 use App\Models\Cliente;
 use App\Models\Pedido;
 
-
-
 // Página inicial de boas-vindas
 
 // Dashboard (Protegido por login) com a coluna de valor corrigida
@@ -33,10 +31,24 @@ Route::get('/dashboard', function () {
         $faturamentoMensal = 0;
     }
 
+    // NOVAS BUSCAS (Adicionadas para a tabela e os avisos não quebrarem)
+    try {
+        // Pega as 5 vendas mais recentes
+        $ultimosPedidos = Pedido::with('cliente')->latest()->take(5)->get();
+        // Pega as flores com estoque <= 5 (usando a coluna exata do seu banco)
+        $estoqueBaixo = Flor::where('quantidade_estoque', '<=', 5)->get();
+    } catch (\Exception $e) {
+        // Se a tabela ainda não existir, envia vazio para não dar erro
+        $ultimosPedidos = collect(); 
+        $estoqueBaixo = collect();
+    }
+
     return view('dashboard', [
         'totalFlores' => $totalFlores,
         'totalClientes' => $totalClientes,
-        'faturamentoMensal' => $faturamentoMensal
+        'faturamentoMensal' => $faturamentoMensal,
+        'ultimosPedidos' => $ultimosPedidos, // <-- Variável enviada para a tela
+        'estoqueBaixo' => $estoqueBaixo      // <-- Variável enviada para a tela
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -55,7 +67,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('pedidos', PedidoController::class);
     
     Route::get('/export-flores', function() {
-
         
         $flores = Flor::all();
         $csvData = "ID,Nome,Cor,Preço,Quantidade Estoque\n";
@@ -68,7 +79,6 @@ Route::middleware('auth')->group(function () {
 
         return Excel::download(new FlorExport, $fileName);
     })->name('flores.export');   
-
 
 });
 
