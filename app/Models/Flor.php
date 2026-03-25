@@ -21,9 +21,13 @@ class Flor extends Model
         'imagem'
     ];
 
-    
-        public function itensPedido()
+
+    public function itensPedido()
     {
         return $this->hasMany(ItemPedido::class);
+    }
+    public function usuariosQueOcultaram()
+    {
+        return $this->belongsToMany(User::class, 'ocultos', 'flor_id', 'user_id');
     }
 }

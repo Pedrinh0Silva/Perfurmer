@@ -25,4 +25,9 @@ class Cliente extends Model
     {
         return $this->hasMany(Pedido::class);
     }
+    public function usuariosQueOcultaram()
+{
+    
+    return $this->belongsToMany(User::class, 'ocultos', 'clientes_id', 'user_id');
+}
 }

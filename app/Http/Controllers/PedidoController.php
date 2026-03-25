@@ -7,17 +7,38 @@ use App\Models\ItemPedido;
 use App\Models\Cliente;
 use App\Models\Flor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 
 class PedidoController extends Controller
 {
     /**
      * Lista todas as vendas realizadas
      */
+    public function ocultar($id)
+    {
+        $item = Pedido::findOrFail($id);
+        $user = auth()->user();
+
+
+        $user->pedidosOcultos()->attach($item->id);
+
+        return redirect()->back()->with('success', 'Item removido da sua visualização!');
+    }
     public function index()
     {
-        // traz os dados disponíveis do cliente junto, evitando consultas extras.
-        $pedidos = Pedido::with('cliente')->orderBy('created_at', 'desc')->get();      
+        $user = auth()->user();
+
+        if ($user->is_admin) {
+            $pedidos = Pedido::with('cliente')->orderBy('created_at', 'desc')->get();
+        } else {
+            $pedidos = Pedido::with('cliente')
+                ->whereDoesntHave('usuariosQueOcultaram', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
         return view('pedidos.index', compact('pedidos'));
     }
 
@@ -28,7 +49,7 @@ class PedidoController extends Controller
     {
         $clientes = Cliente::all(); // Busca todos os clientes
         $flores = Flor::all();     // Busca todas as flores 
-        
+
         return view('pedidos.create', compact('clientes', 'flores'));
     }
 
@@ -39,23 +60,23 @@ class PedidoController extends Controller
     {
         // Validação blindada: verifica o array e o que tem dentro dele
         $request->validate([
-            'cliente_id'         => 'required|exists:clientes,id',
-            'itens'              => 'required|array|min:1',
-            'itens.*.flor_id'    => 'required|exists:flores,id',
+            'cliente_id' => 'required|exists:clientes,id',
+            'itens' => 'required|array|min:1',
+            'itens.*.flor_id' => 'required|exists:flores,id',
             'itens.*.quantidade' => 'required|integer|min:1',
-            'forma_pagamento'    => 'nullable|string|max:100',
+            'forma_pagamento' => 'nullable|string|max:100',
         ]);
 
         try {
             // DB::transaction garante que ou salva TUDO ou desfaz TUDO
             DB::transaction(function () use ($request) {
-                
+
                 // 2. Cria o Pedido (Cabeçalho)
                 $pedido = Pedido::create([
-                    'cliente_id'  => $request->cliente_id,
+                    'cliente_id' => $request->cliente_id,
                     'data_pedido' => now(),
                     'valor_total' => 0, // Vamos atualizar logo abaixo
-                    'status'      => 'realizado',
+                    'status' => 'realizado',
                     'forma_pagamento' => $request->forma_pagamento ?? 'Não especificada'
                 ]);
 
@@ -77,11 +98,11 @@ class PedidoController extends Controller
 
                     // Cria o Item do Pedido
                     ItemPedido::create([
-                        'pedido_id'      => $pedido->id,
-                        'flor_id'        => $flor->id,
-                        'quantidade'     => $quantidade,
+                        'pedido_id' => $pedido->id,
+                        'flor_id' => $flor->id,
+                        'quantidade' => $quantidade,
                         'preco_unitario' => $flor->preco,
-                        'subtotal'       => $subtotal,
+                        'subtotal' => $subtotal,
                         'forma_pagamento' => $request->forma_pagamento ?? 'Não especificada',
                     ]);
 
@@ -118,14 +139,18 @@ class PedidoController extends Controller
     public function destroy($id)
     {
         // BARRAMENTO: Bloqueia se não for admin
-        if (!auth()->user()->is_admin) {
-            return redirect()->back()->withErrors(['erro' => 'Acesso negado! Apenas administradores podem excluir vendas.']);
+        $user = auth()->user();
+        // : Bloqueia se não for admin
+        if (!$user->is_admin) {
+            $user->floresOcultas()->syncWithoutDetaching([$id]);
+
+            return redirect()->route('flores.index')->with('success', 'Item removido da sua lista.');
         }
 
         try {
             // Busca o pedido pelo ID
             $pedido = Pedido::findOrFail($id);
-            
+
             // Deleta o pedido
             $pedido->delete();
 

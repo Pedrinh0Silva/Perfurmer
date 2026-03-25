@@ -16,15 +16,20 @@ class Pedido extends Model
         'data_pedido' => 'datetime',
     ];
 
-    
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class);
     }
 
-    
+
     public function itens()
     {
         return $this->hasMany(ItemPedido::class);
+    }
+    public function usuariosQueOcultaram()
+    {
+        // Note o 'pedidos_id' com S, como está na sua imagem a6f76c
+        return $this->belongsToMany(User::class, 'ocultos', 'pedidos_id', 'user_id');
     }
 }
