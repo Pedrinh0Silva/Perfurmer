@@ -10,7 +10,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="m-0">Exportar</h2>
+        <h2 class="m-0"></h2>
         <a href="{{ route('flores.export') }}" class="btn btn-success">
             Exportar Flores
         </a>
