@@ -51,29 +51,6 @@
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $flor->id }}">
                                             Excluir
                                         </button>
-
-                                        <div class="modal fade" id="deleteModal-{{ $flor->id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ $flor->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel-{{ $flor->id }}">Confirmar Exclusão</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                                                    </div>
-                                                    <div class="modal-body text-wrap text-break">
-                                                        Tem certeza que deseja excluir a flor <strong>{{ $flor->nome }}</strong>? Esta ação não pode ser desfeita.
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                        
-                                                        <form action="{{ route('flores.destroy', $flor->id) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger">Sim, Excluir</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     @endif
                                 @endauth
                             </td>
@@ -88,4 +65,34 @@
         </div>
     </div>
 
+   
+
 @endsection
+ @auth
+        @if(Auth::user()->is_admin)
+            @foreach($flores as $flor)
+                <div class="modal fade" id="deleteModal-{{ $flor->id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ $flor->id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel-{{ $flor->id }}">Confirmar Exclusão</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body text-wrap text-break">
+                                Tem certeza que deseja excluir a flor <strong>{{ $flor->nome }}</strong>? Esta ação não pode ser desfeita.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                
+                                <form action="{{ route('flores.destroy', $flor->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+    @endauth
