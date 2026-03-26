@@ -18,7 +18,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-hover">
+            <table class="table table-hover align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -36,7 +36,7 @@
                             <td>{{ $flor->id }}</td>
                             <td class="text-center">
                                 <div class="flor-thumb-container mx-auto">
-                                    <img src="{{ asset('storage/' . $flor->imagem) }}" alt="{{ $flor->nome }}">
+                                    <img src="{{ asset('storage/' . $flor->imagem) }}" alt="{{ $flor->nome }}" style="width: 50px; height: 50px; object-fit: cover;">
                                 </div>
                             </td>
                             <td>{{ $flor->nome }}</td>
@@ -44,20 +44,27 @@
                             <td>R$ {{ number_format($flor->preco, 2, ',', '.') }}</td>
                             <td>{{ $flor->quantidade_estoque }}</td>
                             <td>
-                                <a href="{{ route('flores.edit', $flor->id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('flores.edit', $flor->id) }}" class="btn btn-sm btn-primary">Editar</a>
 
-                                @auth
-                                    @if(Auth::user()->is_admin)
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $flor->id }}">
-                                            Excluir
-                                        </button>
-                                    @endif
-                                @endauth
+                                    @auth
+                                        @if(Auth::user()->is_admin)
+                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $flor->id }}">
+                                                Excluir
+                                            </button>
+                                        @else
+                                            <form action="{{ route('flores.ocultar', $flor->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-warning">Ocultar</button>
+                                            </form>
+                                        @endif
+                                    @endauth
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-muted">Nenhuma flor cadastrada ainda.</td>
+                            <td colspan="7" class="text-center text-muted py-4">Nenhuma flor cadastrada ainda.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -65,6 +72,7 @@
         </div>
     </div>
 
+    {{-- Modais de Exclusão (Apenas para Admin) --}}
    
 
 @endsection
