@@ -5,6 +5,7 @@ use App\Http\Controllers\FlorController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PedidoController;
 use Illuminate\Support\Facades\Route;
+use App\Exports\PedidoExport;
 use App\Exports\FlorExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Flor;
@@ -95,7 +96,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/export-flores', function() {
         $fileName = 'Relatorio' . date('Y-m-d_H-i-s') . '.xlsx';
         return Excel::download(new FlorExport, $fileName);
-    })->name('flores.export');   
+    })->name('flores.export');
+    Route::get('/export-pedidos', function() {
+        $fileName = 'Relatorio' . date('Y-m-d_H-i-s') . '.xlsx';
+        return Excel::download(new PedidoExport, $fileName);
+    })->name('pedidos.export');   
 });
 
 require __DIR__.'/auth.php';

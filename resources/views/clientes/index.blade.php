@@ -1,27 +1,14 @@
 @extends('layouts.app')
 
 @section('conteudo')
-
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fs-3 fw-light text-muted text-uppercase" style="letter-spacing: 2px;">
-            Lista de Clientes
-        </h2>
+        <h2>Lista de Clientes</h2>
         <a href="{{ route('clientes.create') }}" class="btn btn-success">Novo Cliente</a>
     </div>
 
-    {{-- Se você tiver uma rota para exportar clientes no futuro, pode descomentar o bloco abaixo --}}
-    {{-- 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="m-0">Exportar</h2>
-        <a href="{{ route('clientes.export') }}" class="btn btn-success">
-            Exportar Clientes
-        </a>
-    </div> 
-    --}}
-
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-hover">
+            <table class="table table-hover align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -47,11 +34,14 @@
                             </td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                    <a href="{{ route('clientes.edit', $cliente->id) }}"
+                                        class="btn btn-sm btn-primary">Editar</a>
 
                                     @auth
+
                                         @if(Auth::user()->is_admin)
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModalCliente-{{ $cliente->id }}">
+                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal-{{ $cliente->id }}">
                                                 Excluir
                                             </button>
                                         @else
@@ -66,32 +56,34 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted">Nenhum cliente cadastrado ainda.</td>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Nenhum cliente cadastrado ainda.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-
 @endsection
-
 @auth
     @if(Auth::user()->is_admin)
         @foreach($clientes as $cliente)
-            <div class="modal fade" id="deleteModalCliente-{{ $cliente->id }}" tabindex="-1" aria-labelledby="deleteModalLabelCliente-{{ $cliente->id }}" aria-hidden="true">
+            <div class="modal fade" id="deleteModal-{{ $cliente->id }}" tabindex="-1"
+                aria-labelledby="deleteModalLabel-{{ $cliente->id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabelCliente-{{ $cliente->id }}">Confirmar Exclusão</h5>
+                            <h5 class="modal-title" id="deleteModalLabel-{{ $cliente->id }}">Confirmar Exclusão</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                         </div>
                         <div class="modal-body text-wrap text-break">
-                            Tem certeza que deseja excluir o cliente <strong>{{ $cliente->nome }}</strong>? Esta ação não pode ser desfeita.
+                            Tem certeza que deseja excluir o cliente <strong>{{ $cliente->nome }}</strong>? Esta ação não pode ser
+                            desfeita.
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            
+
                             <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
